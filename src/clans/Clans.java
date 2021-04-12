@@ -6,6 +6,9 @@
 
 package clans;
 
+import java.util.Random;
+
+
 /**
  *
  * @author humeau
@@ -18,10 +21,10 @@ public class Clans {
     public static void main(String[] args) {
         Joueur j1 = new Joueur("j1");
         Joueur j2 = new Joueur("j2");
-        
+
         Jeu j = new Jeu();
-        j.run(j1, j2, false);
         
+        j.run(j1, j2, false);
+
     }
-    
 }
