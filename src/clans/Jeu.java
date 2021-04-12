@@ -484,31 +484,33 @@ public class Jeu {
      * Placement aleatoire des cabanes
      */
     public void placementCabane() {
-        int [] ordreRegion = {4, 5, 7, 8, 1, 6, 3, 10, 0, 2, 9, 11};
-        for(int i = 0; i<12; i++){
+        int[] ordreRegion = { 4, 5, 7, 8, 1, 6, 3, 10, 0, 2, 9, 11 };
+        for (int i = 0; i < 12; i++) {
             boolean estValide = false;
-            int [] distribtionCouleur = new int[5]; 
-            do{
+            int[] distribtionCouleur = new int[5];
+            do {
                 distribtionCouleur = generationTab();
                 estValide = valid(ordreRegion[i], distribtionCouleur);
-            }while(!estValide);
-            for(int j = 0; j<5; j++){
-                this.plateau[(ordreRegion[i]*5)+j].setCabane(distribtionCouleur[j]);
-                System.out.println(" i = "+i+" j = "+j+" Region = "+ordreRegion[i]+ " Terrain = "+(ordreRegion[i]*5+1)+" Couleur affecter = "+distribtionCouleur[j]);
+            } while (!estValide);
+            for (int j = 0; j < 5; j++) {
+                this.plateau[(ordreRegion[i] * 5) + j].setCabane(distribtionCouleur[j]);
             }
         }
 
     }
-    
-    public boolean valid(int region, int[] couleur){
+
+    // Fonction qui prend en fonction la region et le tableau de disctribution des
+    // cabanes par couleur
+    // et retourne true ou false si cette distribution est valide
+    public boolean valid(int region, int[] couleur) {
 
         boolean output = true;
 
-        for(int i = 0; i<5; i++){
-            Terrain terrainActuel = this.plateau[(region*5)+i];
-            for(int j = 0; j<terrainActuel.getNbVoisins(); j++){
+        for (int i = 0; i < 5; i++) {
+            Terrain terrainActuel = this.plateau[(region * 5) + i];
+            for (int j = 0; j < terrainActuel.getNbVoisins(); j++) {
                 Terrain terrainVoisin = this.plateau[terrainActuel.getVoisin(j)];
-                if(terrainVoisin.getCabanes(couleur[i]) > 0)
+                if (terrainVoisin.getCabanes(couleur[i]) > 0)
                     output = false;
             }
         }
@@ -516,7 +518,7 @@ public class Jeu {
         return output;
     }
 
-    // Fonction qui retourne un tableau de 5 int allat de 0 à 4 aleatoirs et
+    // Fonction qui retourne un tableau de 5 int allant de 0 à 4 aleatoirs et
     // distinct
     // A NOTER : Cette fonction est un peu "Brutte" de complexité O(n^2) et peut
     // etre optimiser mais cela est acceptable dans ce cas, le tableau etant de
@@ -616,7 +618,32 @@ public class Jeu {
      * @return vrai si un coup est valide
      */
     public boolean coupValide(int _source, int _dest) {
-        return true;
+
+        boolean output = false;
+        Terrain source = this.plateau[_source];
+        Terrain destination = this.plateau[_dest];
+
+        if (estVoisinDe(_source, _dest) && !source.estVide() && !destination.estVide()) {
+            if (source.estBloque()) {
+                if (destination.estBloque() && source.getNbCabane() >= destination.getNbCabane())
+                    output = true;
+            } else
+                output = true;
+        }
+        return output;
+
+    }
+
+    public boolean estVoisinDe(int n1, int n2) {
+        boolean output = false;
+        if (n1 != n2) {
+            Terrain terrain1 = this.plateau[n1];
+            for (int i = 0; i < terrain1.getNbVoisins(); i++) {
+                if (terrain1.getVoisin(i) == n2)
+                    output = true;
+            }
+        }
+        return output;
     }
 
     /**
